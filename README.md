@@ -29,4 +29,4 @@
 6. Использование JS для реализации пользовательских функций на сайте.
 
 ### Ссылка на GitHub Pages:
-https://a1ees.github.io/russian-travel/
+https://a1ees.github.io/mesto/
