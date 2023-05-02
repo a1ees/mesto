@@ -22,3 +22,10 @@
     margin: 0px 22px 25px 22px;
   }
 }
+
+@media screen and (max-width: 320px) {
+  .popup__button {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}

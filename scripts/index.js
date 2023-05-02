@@ -11,8 +11,8 @@ let closeButton = document.querySelector('.popup__close-button');
 
 editButton.addEventListener('click', function () {
   popup.classList.add('popup_opened');
-  popupNameValue.setAttribute('value', profileName.textContent);
-  popupProfessionValue.setAttribute('value', profileProfession.textContent);
+  popupNameValue.value = profileName.textContent;
+  popupProfessionValue.value = profileProfession.textContent;
 }); 
 
 saveButton.addEventListener('click', function (evt) {
