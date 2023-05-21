@@ -3,4 +3,6 @@
   background: #FFFFFF;
   max-width: 282px;
   overflow: hidden;
+  position: relative;
 }
+

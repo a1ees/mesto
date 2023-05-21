@@ -23,48 +23,16 @@
         <button type="button" class="profile__add-button"></button>
       </section>
       <section class="cards">
-        <article class="cards__item">
-          <img src="./images/karachaevsk.png" alt="Карачаевск" class="cards__image">
-          <div class="cards__content">
-            <h2 class="cards__title">Карачаевск</h2>
-            <button type="button" class="cards__btn"></button>
+        <template id="cards__item">
+          <div class="cards__item">
+            <button type="button" class="cards__remove-btn"></button>
+            <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" class="cards__image">
+            <div class="cards__content">
+              <h2 class="cards__title"></h2>
+              <button type="button" class="cards__btn"></button>
+            </div>
           </div>
-        </article>
-        <article class="cards__item">
-          <img src="./images/elbrus.png" alt="Карачаевск" class="cards__image">
-          <div class="cards__content">
-            <h2 class="cards__title">Гора Эльбрус</h2>
-            <button type="button" class="cards__btn"></button>
-          </div>
-        </article>
-        <article class="cards__item">
-          <img src="./images/dombai.png" alt="Карачаевск" class="cards__image">
-          <div class="cards__content">
-            <h2 class="cards__title">Домбай</h2>
-            <button type="button" class="cards__btn"></button>
-          </div>
-        </article>
-        <article class="cards__item">
-          <img src="./images/elbrus.png" alt="Карачаевск" class="cards__image">
-          <div class="cards__content">
-            <h2 class="cards__title">Гора Эльбрус</h2>
-            <button type="button" class="cards__btn"></button>
-          </div>
-        </article>
-        <article class="cards__item">
-          <img src="./images/dombai.png" alt="Карачаевск" class="cards__image">
-          <div class="cards__content">
-            <h2 class="cards__title">Домбай</h2>
-            <button type="button" class="cards__btn"></button>
-          </div>
-        </article>
-        <article class="cards__item">
-          <img src="./images/karachaevsk.png" alt="Карачаевск" class="cards__image">
-          <div class="cards__content">
-            <h2 class="cards__title">Карачаево-Черкесия</h2>
-            <button type="button" class="cards__btn"></button>
-          </div>
-        </article>
+        </template>
       </section>
     </main>
     <footer class="footer">
@@ -84,6 +52,30 @@
           <button type="submit" class="popup__button">Сохранить</button>
         </form>
       </div>
+    </section>
+    <section class="popup popup_add-card">
+      <div class="popup__container">
+        <button type="button" class="popup__close-button popup__close-button_add-card"></button>
+        <h2 class="popup__title">Новое место</h2>
+        <form class="popup__form" name="popup">
+          <label class="popup__item popup__item_place">
+            <input class="popup__input popup__input_place" type="text" placeholder="Название" name="place" required>
+          </label>
+          <label class="popup__item popup__item_place-pic">
+            <input class="popup__input popup__input_place-pic" type="text" placeholder="Ссылка на картинку" name="placepic" required>
+          </label>
+          <button type="submit" class="popup__button popup__button_add-card">Сохранить</button>
+        </form>
+      </div>
+    </section>
+    <section class="popup-cards">
+      <template id="popup-cards__container">
+        <div class="popup-cards__container">
+          <button type="button" class="popup-cards__close-btn"></button>
+          <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="Карачаевск" class="popup-cards__image">
+          <h2 class="popup-cards__title">Карачаево-Черкессия</h2>
+        </div>
+      </template>
     </section>
   </div>
   <script src="./scripts/index.js"></script>
