@@ -38,7 +38,7 @@
     <footer class="footer">
       <p class="footer__signature">© 2020 Mesto Russia</p>
     </footer>
-    <section class="popup">
+    <section class="popup popup_edit-profile">
       <div class="popup__container">
         <button type="button" class="popup__close-button"></button>
         <h2 class="popup__title">Редактировать профиль</h2>
@@ -62,22 +62,21 @@
             <input class="popup__input popup__input_place" type="text" placeholder="Название" name="place" required>
           </label>
           <label class="popup__item popup__item_place-pic">
-            <input class="popup__input popup__input_place-pic" type="text" placeholder="Ссылка на картинку" name="placepic" required>
+            <input class="popup__input popup__input_place-pic" type="url" placeholder="Ссылка на картинку" name="placepic" required>
           </label>
           <button type="submit" class="popup__button popup__button_add-card">Сохранить</button>
         </form>
       </div>
     </section>
-    <section class="popup-cards">
-      <template id="popup-cards__container">
-        <div class="popup-cards__container">
-          <button type="button" class="popup-cards__close-btn"></button>
-          <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="Карачаевск" class="popup-cards__image">
-          <h2 class="popup-cards__title">Карачаево-Черкессия</h2>
-        </div>
-      </template>
+    <section class="popup popup_open-card">
+      <div class="popup__container popup__container_open-card">
+        <button type="button" class="popup__close-button popup__close-button_open-card"></button>
+        <img alt="Карачаевск" class="popup__image">
+        <h2 class="popup__title popup__title_open-card"></h2>
+      </div>
     </section>
   </div>
+  <script src="./scripts/constants.js"></script>
   <script src="./scripts/index.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 const editButton = document.querySelector('.profile__edit-button');
-const popup = document.querySelector('.popup');
+const popupEditProfile = document.querySelector('.popup_edit-profile');
 const saveButton = document.querySelector('.popup__button');
 const saveButtonCards = document.querySelector('.popup__button_add-card');
 const popupName = document.querySelector('.popup__item_name');
@@ -10,193 +10,136 @@ const profileName = document.querySelector('.profile__name');
 const profileProfession = document.querySelector('.profile__profession');
 const closeButton = document.querySelector('.popup__close-button');
 const addButton = document.querySelector('.profile__add-button');
-const popupCards = document.querySelector('.popup_add-card');
+const popupCard = document.querySelector('.popup_add-card');
+const popupCardOpen = document.querySelector('.popup_open-card');
 const nameInput = document.querySelector('.popup__input_place');
 const linkInput = document.querySelector('.popup__input_place-pic'); 
 const closeButtonAddCard = document.querySelector('.popup__close-button_add-card');
+const closeButtonOpenCard = document.querySelector('.popup__close-button_open-card');
 
+
+function openPopup(popup) {
+  popup.classList.add('popup_opened');
+};
+
+function closePopup(popup) {
+  popup.classList.remove('popup_opened');
+};
 
 editButton.addEventListener('click', function () {
-  popup.classList.add('popup_opened');
+  openPopup(popupEditProfile);
   popupNameValue.value = profileName.textContent;
   popupProfessionValue.value = profileProfession.textContent;
 }); 
 
-saveButton.addEventListener('click', function (evt) {
+popupEditProfile.addEventListener('submit', function (evt) {
   evt.preventDefault();
   profileName.textContent = popupNameValue.value;
   profileProfession.textContent = popupProfessionValue.value;
-  popup.classList.remove('popup_opened');
+  closePopup(popupEditProfile);
 }); 
 
 closeButton.addEventListener('click', function () {
-  popup.classList.remove('popup_opened');
+  closePopup(popupEditProfile);
 }); 
 
 closeButton.addEventListener('click', function () {
-  popupCards.classList.remove('popup_opened');
+  closePopup(popupCard);
 }); 
-
-
-
-//Массив, содержащий имя и фото карточек 
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
 
 // получили темплейт элемент и кинули его в констатну
 const cardsItem = document.querySelector('#cards__item').content;
 
 // получили блок, к которому будем добавлять темплейт элемент с значениями
-const cardsTemplate = document.querySelector('.cards');
+const cardsContainer = document.querySelector('.cards');
 
-
-// сделали функцию добавления карточек на страницу
-function processInitialCards() {
-  // сделали функцию, перебирающую массив с названием и фото карточек
-  initialCards.forEach(function (item) {
-  // массив будет клонироваться на каждой итерации в константу
+// Объявление функции createCard, которая принимает объект cardData в качестве аргумента. Этот объект содержит данные карточки.
+// берет данные карточки, создает новый элемент карточки на основе шаблона, заполняет его данными и возвращает созданный элемент.
+function createCard(cardData) {
+  //Получили элемент шаблона карточки из DOM и клонировали с сохранением результата в cardsElement
   const cardsElement = cardsItem.querySelector('.cards__item').cloneNode(true);
-  // будем получать значения классов с картинками и заголовками на каждой итерации
   const cardsImage = cardsElement.querySelector('.cards__image');
   const cardsTitle = cardsElement.querySelector('.cards__title');
-  // ссылка на картинку = элементМассива.сЗначениемLink
-  cardsImage.src = item.link;
-  cardsTitle.textContent = item.name;
-  // в конце функции мы добавляем клон массива к секции cards в html
-  cardsTemplate.append(cardsElement)
-});
+  
+  cardsImage.src = cardData.link;
+  cardsImage.alt = cardData.name;
+  cardsTitle.textContent = cardData.name;
+  
+  return cardsElement;
 };
 
-
-
-function addFirstCard() {
-  const firstCard = initialCards[0]; // Получаем первую карточку
-  const cardsElement = cardsItem.querySelector('.cards__item').cloneNode(true);
-  const cardsImage = cardsElement.querySelector('.cards__image');
-  const cardsTitle = cardsElement.querySelector('.cards__title');
-  
-  cardsImage.src = firstCard.link;
-  cardsTitle.textContent = firstCard.name;
-  
-  cardsTemplate.prepend(cardsElement); // Используем prepend для добавления карточки в начало списка
-}
-
+//функция добавления карточек на страницу с массива initialCards
+function processInitialCards() {
+  // перебираем массив
+  initialCards.forEach(function (item) {
+    //создаем новую карточку и помещаем её в константу newCard, создание происходит на каждой итерации
+    const newCard = createCard(item);
+    //добавляем созданные карточки в контейнер
+    cardsContainer.append(newCard);
+  });
+};
 
 processInitialCards();
 
+// функция добавления новых карточек
+function addCard(cardData) {
+  //создали новую карточку. Результат создания новой карточки сохраняется в переменную newCard.
+  const newCard = createCard(cardData);
+  //добавили карточку в начало cardsContainer
+  cardsContainer.prepend(newCard);
+};
 
 addButton.addEventListener('click', function() {
-  popupCards.classList.add('popup_opened');
+  openPopup(popupCard);
 });
 
-
-saveButtonCards.addEventListener('click', function (evt) {
+popupCard.addEventListener('submit', function (evt) {
   evt.preventDefault();
   const nameValue = nameInput.value;
   const linkValue = linkInput.value;
-  if (nameValue && linkValue) {
-    const newCard = { name: nameValue, link: linkValue };
-    initialCards.unshift(newCard);
-    nameInput.value = '';
-    linkInput.value = '';
-    addFirstCard();
-  }
-  popupCards.classList.remove('popup_opened');
-  console.log(initialCards)
-}); 
+  const newCard = { name: nameValue, link: linkValue };
 
+  nameInput.value = '';
+  linkInput.value = '';
+
+  addCard(newCard);
+  closePopup(popupCard);
+}); 
 
 closeButtonAddCard.addEventListener('click', function () {
-  popupCards.classList.remove('popup_opened');
+  closePopup(popupCard);
 }); 
 
 
-cardsTemplate.addEventListener('click', function(event) {
+
+cardsContainer.addEventListener('click', function(event) {
+  // делегировали события, при клике на любую из карточек js будет определять, произошел ли клик на лайк.
   if (event.target.classList.contains('cards__btn')) {
     const like = event.target;
-    const isActive = like.classList.contains('cards__btn_active');
-    if (!isActive) {
-      like.classList.add('cards__btn_active');
-    } else {
-      like.classList.remove('cards__btn_active');
-    }
-  }
-});
+    like.classList.toggle('cards__btn_active');
+  };
 
-// делегировали события, при клике на любую из карточек js будет определять, произошел ли клик на кнопку удаления.
-cardsTemplate.addEventListener('click', function(event) {
-  //содержит ли элемент, на котором произошло событие клика, класс 'cards__remove-btn'
+  // делегировали события, при клике на любую из карточек js будет определять, произошел ли клик на кнопку удаления.
   if (event.target.classList.contains('cards__remove-btn')) {
     const cardItem = event.target.closest('.cards__item');
     cardItem.remove();
-  }
-});
-
-// получили темплейт элемент и кинули его в констатну
-const cardsPopupItem = document.querySelector('#popup-cards__container').content;
-
-// получили блок, к которому будем добавлять темплейт элемент с значениями
-const cardsTemplatePopup = document.querySelector('.popup-cards');
-
-cardsTemplate.addEventListener('click', function(event) {
+  };
+  // делегировали события, при клике на любую из карточек js будет определять, произошел ли клик на картинку.
   if (event.target.classList.contains('cards__image')) {
-    const cardImg = event.target.closest('.cards__image').src;
     const cardItem = event.target.closest('.cards__item');
+    const cardImg = cardItem.querySelector('.cards__image').src;
     const cardTitle = cardItem.querySelector('.cards__title').textContent;
-    cardsTemplatePopup.classList.add('popup-cards_opened');
-    const cardsPopupElement = cardsPopupItem.querySelector('.popup-cards__container').cloneNode(true);
-    const cardsPopupImage = cardsPopupElement.querySelector('.popup-cards__image');
-    const cardsPopupTitle = cardsPopupElement.querySelector('.popup-cards__title');
-    
-    cardsPopupImage.src = cardImg;
-    cardsPopupTitle.textContent = cardTitle;
-    cardsTemplatePopup.append(cardsPopupElement)
-  }
-  const cardsContainer = document.querySelector('.popup-cards__container');
-  const closeButtonPopupCard = document.querySelector('.popup-cards__close-btn');
-  closeButtonPopupCard.addEventListener('click', function () {
-  cardsTemplatePopup.classList.remove('popup-cards_opened');
-  cardsContainer.remove();
-}); 
+
+    const popupImg = document.querySelector('.popup__image');
+    const popupTitle = document.querySelector('.popup__title_open-card');
+
+    popupImg.src = cardImg;
+    popupTitle.textContent = cardTitle;
+
+    openPopup(popupCardOpen);
+  };
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+closeButtonOpenCard.addEventListener('click', function () {
+  closePopup(popupCardOpen);
+}); 
