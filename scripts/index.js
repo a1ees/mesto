@@ -1,6 +1,5 @@
 const editButton = document.querySelector('.profile__edit-button');
 const popupEditProfile = document.querySelector('.popup_edit-profile');
-const saveButton = document.querySelector('.popup__button');
 const saveButtonCards = document.querySelector('.popup__button_add-card');
 const popupName = document.querySelector('.popup__item_name');
 const popupProfession = document.querySelector('.popup__item_profession');
@@ -19,10 +18,13 @@ const closeButtonOpenCard = document.querySelector('.popup__close-button_open-ca
 
 
 function openPopup(popup) {
+  // Добавили слушатель при открытии попапа
+  document.addEventListener('keydown', handleEscClose);
   popup.classList.add('popup_opened');
 };
 
 function closePopup(popup) {
+  document.removeEventListener('keydown', handleEscClose);
   popup.classList.remove('popup_opened');
 };
 
@@ -37,14 +39,6 @@ popupEditProfile.addEventListener('submit', function (evt) {
   profileName.textContent = popupNameValue.value;
   profileProfession.textContent = popupProfessionValue.value;
   closePopup(popupEditProfile);
-}); 
-
-closeButton.addEventListener('click', function () {
-  closePopup(popupEditProfile);
-}); 
-
-closeButton.addEventListener('click', function () {
-  closePopup(popupCard);
 }); 
 
 // получили темплейт элемент и кинули его в констатну
@@ -106,12 +100,6 @@ popupCard.addEventListener('submit', function (evt) {
   closePopup(popupCard);
 }); 
 
-closeButtonAddCard.addEventListener('click', function () {
-  closePopup(popupCard);
-}); 
-
-
-
 cardsContainer.addEventListener('click', function(event) {
   // делегировали события, при клике на любую из карточек js будет определять, произошел ли клик на лайк.
   if (event.target.classList.contains('cards__btn')) {
@@ -140,6 +128,57 @@ cardsContainer.addEventListener('click', function(event) {
   };
 });
 
-closeButtonOpenCard.addEventListener('click', function () {
-  closePopup(popupCardOpen);
-}); 
+// Функция для закрытия попапа при нажатии на Esc
+function handleEscClose(event) {
+  if (event.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
+  }
+}
+
+// Функция для закрытия попапа при клике на оверлей
+function handleOverlayClick(event) {
+  if (event.target === event.currentTarget) {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
+  }
+}
+
+// Добавляем обработчики событий для каждого попапа
+popupEditProfile.addEventListener('click', handleOverlayClick);
+popupCard.addEventListener('click', handleOverlayClick);
+popupCardOpen.addEventListener('click', handleOverlayClick);
+а 
+// Добавляем обработчик события для кнопки закрытия попапа
+const closeButtons = document.querySelectorAll('.popup__close-button');
+closeButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
