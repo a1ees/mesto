@@ -42,7 +42,7 @@
       <div class="popup__container">
         <button type="button" class="popup__close-button"></button>
         <h2 class="popup__title">Редактировать профиль</h2>
-        <form class="popup__form" name="popup">
+        <form class="popup__form" name="popup" novalidate>
           <label class="popup__item popup__item_name">
             <input id="name-input" class="popup__input popup__input_name" type="text" name="name" minlength="2" maxlength="40" required>
             <span class="name-input-error popup__input-error"></span>
@@ -59,7 +59,7 @@
       <div class="popup__container">
         <button type="button" class="popup__close-button popup__close-button_add-card"></button>
         <h2 class="popup__title">Новое место</h2>
-        <form class="popup__form" name="popup">
+        <form class="popup__form" name="popup" novalidate>
           <label class="popup__item popup__item_place">
             <input id="place-input" class="popup__input popup__input_place" type="text" placeholder="Название" name="place" minlength="2" maxlength="30" required>
             <span class="place-input-error popup__input-error">Заполните это поле</span>
@@ -68,7 +68,7 @@
             <input id="place-pic-input" class="popup__input popup__input_place-pic" type="url" placeholder="Ссылка на картинку" name="placepic" required>
             <span class="place-pic-input-error popup__input-error">Заполните это поле</span>
           </label>
-          <button type="submit" class="popup__button popup__button_add-card" >Сохранить</button>
+          <button type="submit" class="popup__button popup__button_add-card popup__button_disabled" disabled >Сохранить</button>
         </form>
       </div>
     </section>

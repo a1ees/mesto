@@ -7,7 +7,6 @@ const popupNameValue = popupName.querySelector('input');
 const popupProfessionValue = popupProfession.querySelector('input');
 const profileName = document.querySelector('.profile__name');
 const profileProfession = document.querySelector('.profile__profession');
-const closeButton = document.querySelector('.popup__close-button');
 const addButton = document.querySelector('.profile__add-button');
 const popupCard = document.querySelector('.popup_add-card');
 const popupCardOpen = document.querySelector('.popup_open-card');
@@ -98,6 +97,9 @@ popupCard.addEventListener('submit', function (evt) {
 
   addCard(newCard);
   closePopup(popupCard);
+
+  saveButtonCards.classList.add('popup__button_disabled');
+  saveButtonCards.disabled = true;
 }); 
 
 cardsContainer.addEventListener('click', function(event) {
@@ -139,8 +141,7 @@ function handleEscClose(event) {
 // Функция для закрытия попапа при клике на оверлей
 function handleOverlayClick(event) {
   if (event.target === event.currentTarget) {
-    const openedPopup = document.querySelector('.popup_opened');
-    closePopup(openedPopup);
+    closePopup(event.target);
   }
 }
 
@@ -148,13 +149,14 @@ function handleOverlayClick(event) {
 popupEditProfile.addEventListener('click', handleOverlayClick);
 popupCard.addEventListener('click', handleOverlayClick);
 popupCardOpen.addEventListener('click', handleOverlayClick);
-а 
-// Добавляем обработчик события для кнопки закрытия попапа
+
+
 const closeButtons = document.querySelectorAll('.popup__close-button');
 closeButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const openedPopup = document.querySelector('.popup_opened');
-    closePopup(openedPopup);
+  const popup = button.closest('.popup');
+  // Добавляем обработчик события для кнопки закрытия попапа
+  button.addEventListener('click', function() {
+    closePopup(popup);
   });
 });
 
