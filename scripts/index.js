@@ -9,15 +9,14 @@ const profileName = document.querySelector('.profile__name');
 const profileProfession = document.querySelector('.profile__profession');
 const addButton = document.querySelector('.profile__add-button');
 const popupCard = document.querySelector('.popup_add-card');
-const popupCardOpen = document.querySelector('.popup_open-card');
 const nameInput = document.querySelector('.popup__input_place');
 const linkInput = document.querySelector('.popup__input_place-pic'); 
-const closeButtonAddCard = document.querySelector('.popup__close-button_add-card');
-const closeButtonOpenCard = document.querySelector('.popup__close-button_open-card');
-
+const closeButtons = document.querySelectorAll('.popup__close-button');
+const popupCardOpen = document.querySelector('.popup_open-card');
+const cardsItems = '#cards__item';
+const cardsContainer = document.querySelector('.cards');
 
 function openPopup(popup) {
-  // Добавили слушатель при открытии попапа
   document.addEventListener('keydown', handleEscClose);
   popup.classList.add('popup_opened');
 };
@@ -27,66 +26,10 @@ function closePopup(popup) {
   popup.classList.remove('popup_opened');
 };
 
-editButton.addEventListener('click', function () {
-  openPopup(popupEditProfile);
-  popupNameValue.value = profileName.textContent;
-  popupProfessionValue.value = profileProfession.textContent;
-}); 
 
-popupEditProfile.addEventListener('submit', function (evt) {
-  evt.preventDefault();
-  profileName.textContent = popupNameValue.value;
-  profileProfession.textContent = popupProfessionValue.value;
-  closePopup(popupEditProfile);
-}); 
+import Card from '../scripts/Card.js'
 
-// получили темплейт элемент и кинули его в констатну
-const cardsItem = document.querySelector('#cards__item').content;
-
-// получили блок, к которому будем добавлять темплейт элемент с значениями
-const cardsContainer = document.querySelector('.cards');
-
-// Объявление функции createCard, которая принимает объект cardData в качестве аргумента. Этот объект содержит данные карточки.
-// берет данные карточки, создает новый элемент карточки на основе шаблона, заполняет его данными и возвращает созданный элемент.
-function createCard(cardData) {
-  //Получили элемент шаблона карточки из DOM и клонировали с сохранением результата в cardsElement
-  const cardsElement = cardsItem.querySelector('.cards__item').cloneNode(true);
-  const cardsImage = cardsElement.querySelector('.cards__image');
-  const cardsTitle = cardsElement.querySelector('.cards__title');
-  
-  cardsImage.src = cardData.link;
-  cardsImage.alt = cardData.name;
-  cardsTitle.textContent = cardData.name;
-  
-  return cardsElement;
-};
-
-//функция добавления карточек на страницу с массива initialCards
-function processInitialCards() {
-  // перебираем массив
-  initialCards.forEach(function (item) {
-    //создаем новую карточку и помещаем её в константу newCard, создание происходит на каждой итерации
-    const newCard = createCard(item);
-    //добавляем созданные карточки в контейнер
-    cardsContainer.append(newCard);
-  });
-};
-
-processInitialCards();
-
-// функция добавления новых карточек
-function addCard(cardData) {
-  //создали новую карточку. Результат создания новой карточки сохраняется в переменную newCard.
-  const newCard = createCard(cardData);
-  //добавили карточку в начало cardsContainer
-  cardsContainer.prepend(newCard);
-};
-
-addButton.addEventListener('click', function() {
-  openPopup(popupCard);
-});
-
-popupCard.addEventListener('submit', function (evt) {
+popupCard.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const nameValue = nameInput.value;
   const linkValue = linkInput.value;
@@ -102,35 +45,19 @@ popupCard.addEventListener('submit', function (evt) {
   saveButtonCards.disabled = true;
 }); 
 
-cardsContainer.addEventListener('click', function(event) {
-  // делегировали события, при клике на любую из карточек js будет определять, произошел ли клик на лайк.
-  if (event.target.classList.contains('cards__btn')) {
-    const like = event.target;
-    like.classList.toggle('cards__btn_active');
-  };
+// добавляет карты из массива на страницу
+(function processInitialCards() {
+  initialCards.forEach(function (item) {
+    const cards = new Card(item, cardsItems);
+    cardsContainer.append(cards.generateCard());
+  });
+})();
 
-  // делегировали события, при клике на любую из карточек js будет определять, произошел ли клик на кнопку удаления.
-  if (event.target.classList.contains('cards__remove-btn')) {
-    const cardItem = event.target.closest('.cards__item');
-    cardItem.remove();
-  };
-  // делегировали события, при клике на любую из карточек js будет определять, произошел ли клик на картинку.
-  if (event.target.classList.contains('cards__image')) {
-    const cardItem = event.target.closest('.cards__item');
-    const cardImg = cardItem.querySelector('.cards__image').src;
-    const cardTitle = cardItem.querySelector('.cards__title').textContent;
+function addCard(cardData) {
+  const newCard = new Card(cardData, cardsItems);
+  cardsContainer.prepend(newCard.generateCard());
+};
 
-    const popupImg = document.querySelector('.popup__image');
-    const popupTitle = document.querySelector('.popup__title_open-card');
-
-    popupImg.src = cardImg;
-    popupTitle.textContent = cardTitle;
-
-    openPopup(popupCardOpen);
-  };
-});
-
-// Функция для закрытия попапа при нажатии на Esc
 function handleEscClose(event) {
   if (event.key === 'Escape') {
     const openedPopup = document.querySelector('.popup_opened');
@@ -138,20 +65,33 @@ function handleEscClose(event) {
   }
 }
 
-// Функция для закрытия попапа при клике на оверлей
 function handleOverlayClick(event) {
   if (event.target === event.currentTarget) {
     closePopup(event.target);
   }
 }
 
-// Добавляем обработчики событий для каждого попапа
+addButton.addEventListener('click', () => {
+  openPopup(popupCard);
+});
+
 popupEditProfile.addEventListener('click', handleOverlayClick);
 popupCard.addEventListener('click', handleOverlayClick);
 popupCardOpen.addEventListener('click', handleOverlayClick);
 
+editButton.addEventListener('click', function () {
+  openPopup(popupEditProfile);
+  popupNameValue.value = profileName.textContent;
+  popupProfessionValue.value = profileProfession.textContent;
+}); 
 
-const closeButtons = document.querySelectorAll('.popup__close-button');
+popupEditProfile.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+  profileName.textContent = popupNameValue.value;
+  profileProfession.textContent = popupProfessionValue.value;
+  closePopup(popupEditProfile);
+}); 
+
 closeButtons.forEach((button) => {
   const popup = button.closest('.popup');
   // Добавляем обработчик события для кнопки закрытия попапа
@@ -160,27 +100,4 @@ closeButtons.forEach((button) => {
   });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import FormValidator from '../scripts/FormValidator.js'
