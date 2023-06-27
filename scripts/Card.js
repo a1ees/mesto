@@ -1,3 +1,5 @@
+import {popupCardOpen, popupImg, popupTitle, openPopup} from '../scripts/index.js';
+
 export default class Card {
   constructor(data, templateSelector) {
     this._name = data.name;
@@ -6,12 +8,11 @@ export default class Card {
   }
 
   _getTemplate() {
-    const cardElement = document
+    return document
     .querySelector(this._templateSelector)
     .content
     .querySelector('.cards__item')
     .cloneNode(true);
-    return cardElement;
   }
 
   generateCard() {
@@ -36,12 +37,9 @@ export default class Card {
   }
 
   _handleCardOpen() {
-    const popupImg = document.querySelector('.popup__image');
-    const popupTitle = document.querySelector('.popup__title_open-card');
-    const popupCardOpen = document.querySelector('.popup_open-card');
     popupImg.src = this._cardImage.src;
     popupTitle.textContent = this._cardTitle.textContent;
-    popupCardOpen.classList.add('popup_opened');
+    openPopup(popupCardOpen);
   }
 
 

@@ -1,3 +1,4 @@
+import Card from '../scripts/Card.js'
 const editButton = document.querySelector('.profile__edit-button');
 const popupEditProfile = document.querySelector('.popup_edit-profile');
 const saveButtonCards = document.querySelector('.popup__button_add-card');
@@ -12,11 +13,16 @@ const popupCard = document.querySelector('.popup_add-card');
 const nameInput = document.querySelector('.popup__input_place');
 const linkInput = document.querySelector('.popup__input_place-pic'); 
 const closeButtons = document.querySelectorAll('.popup__close-button');
-const popupCardOpen = document.querySelector('.popup_open-card');
 const cardsItems = '#cards__item';
 const cardsContainer = document.querySelector('.cards');
 
-function openPopup(popup) {
+export const popupCardOpen = document.querySelector('.popup_open-card');
+export const popupImg = document.querySelector('.popup__image');
+export const popupTitle = document.querySelector('.popup__title_open-card');
+
+
+
+export function openPopup(popup) {
   document.addEventListener('keydown', handleEscClose);
   popup.classList.add('popup_opened');
 };
@@ -25,9 +31,6 @@ function closePopup(popup) {
   document.removeEventListener('keydown', handleEscClose);
   popup.classList.remove('popup_opened');
 };
-
-
-import Card from '../scripts/Card.js'
 
 popupCard.addEventListener('submit', (evt) => {
   evt.preventDefault();
