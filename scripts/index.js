@@ -1,4 +1,5 @@
 import Card from '../scripts/Card.js'
+import FormValidator from '../scripts/FormValidator.js'
 const editButton = document.querySelector('.profile__edit-button');
 const popupEditProfile = document.querySelector('.popup_edit-profile');
 const saveButtonCards = document.querySelector('.popup__button_add-card');
@@ -20,8 +21,6 @@ export const popupCardOpen = document.querySelector('.popup_open-card');
 export const popupImg = document.querySelector('.popup__image');
 export const popupTitle = document.querySelector('.popup__title_open-card');
 
-
-
 export function openPopup(popup) {
   document.addEventListener('keydown', handleEscClose);
   popup.classList.add('popup_opened');
@@ -40,19 +39,15 @@ popupCard.addEventListener('submit', (evt) => {
 
   nameInput.value = '';
   linkInput.value = '';
-
   addCard(newCard);
   closePopup(popupCard);
 
-  saveButtonCards.classList.add('popup__button_disabled');
-  saveButtonCards.disabled = true;
 }); 
 
 // добавляет карты из массива на страницу
 (function processInitialCards() {
   initialCards.forEach(function (item) {
-    const cards = new Card(item, cardsItems);
-    cardsContainer.append(cards.generateCard());
+    addCard(item);
   });
 })();
 
@@ -103,4 +98,18 @@ closeButtons.forEach((button) => {
   });
 });
 
-import FormValidator from '../scripts/FormValidator.js'
+const validationConfig = {
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type-error',
+  errorClass: 'popup__input-error_visible'
+};
+
+const formProfile = document.querySelector('.popup__form_edit-profile');
+const formProfileClass = new FormValidator(validationConfig, formProfile);
+formProfileClass.enableValidation();
+
+const formPlace = document.querySelector('.popup__form_new-place');
+const formPlaceClass = new FormValidator(validationConfig, formPlace);
+formPlaceClass.enableValidation();
