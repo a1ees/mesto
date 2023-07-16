@@ -1,10 +1,10 @@
-import {closeButtons} from '../pages/index.js';
 
 export default class Popup {
   constructor(selector) {
     this._container = document.querySelector(selector);
     this._handleEscClose = this._handleEscClose.bind(this);
     this._handleOverlayClick = this._handleOverlayClick.bind(this);
+    this._closeButtons = this._container.querySelector('.popup__close-button');
   }
 
   open() {
@@ -32,11 +32,9 @@ export default class Popup {
   }
   
   setEventListeners() {
-    closeButtons.forEach((button) => {
-      button.addEventListener('click', (event) => {
-        event.stopPropagation();
-        this.close();
-      });
-    });
+    this._closeButtons.addEventListener('click', (event) => {
+      event.stopPropagation();
+      this.close()
+    })
   }
 }

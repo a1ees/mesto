@@ -1,11 +1,10 @@
-import { popupWithImage } from '../pages/index.js';
 
 export default class Card {
-  constructor(data, templateSelector) {
+  constructor(data, templateSelector, handleCardClick) {
     this._name = data.name;
     this._link = data.link;
     this._templateSelector = templateSelector;
-    this._handleCardClick = popupWithImage;
+    this._handleCardClick = handleCardClick;
   }
 
   _getTemplate() {

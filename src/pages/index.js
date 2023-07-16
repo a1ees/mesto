@@ -5,7 +5,8 @@ import Section from '../components/Section.js'
 import UserInfo from '../components/UserInfo.js'
 import PopupWithImage from '../components/PopupWithImage.js'
 import PopupWithForm from '../components/PopupWithForm.js'
-import initialCards from '../utils/constants.js'
+import {initialCards} from '../utils/constants.js'
+import {validationConfig} from '../utils/constants.js'
 
 const editButton = document.querySelector('.profile__edit-button');
 const popupName = document.querySelector('.popup__input_name');
@@ -14,11 +15,10 @@ const addButton = document.querySelector('.profile__add-button');
 const cardsItems = '#cards__item';
 const cardsContainer = '.cards';
 
-export const closeButtons = document.querySelectorAll('.popup__close-button');
-export const popupImg = document.querySelector('.popup__image');
-export const popupTitle = document.querySelector('.popup__title_open-card');
+const popupImg = document.querySelector('.popup__image');
+const popupTitle = document.querySelector('.popup__title_open-card');
 
-export const popupWithImage = new PopupWithImage('.popup_open-card');
+const popupWithImage = new PopupWithImage('.popup_open-card', popupImg, popupTitle);
 const popupEditProfile = new PopupWithForm('.popup_edit-profile', editCallback);
 const popupAdd = new PopupWithForm('.popup_add-card', addCallback);
 const userInfo = new UserInfo({
@@ -40,7 +40,7 @@ function addCallback(inputValues) {
 popupAdd.setEventListeners();
 
 function createCard(item) {
-  const card = new Card(item, cardsItems)
+  const card = new Card(item, cardsItems, popupWithImage)
     const cardElement = card.generateCard();
     cardsList.addItem(cardElement);
 }
@@ -65,14 +65,6 @@ editButton.addEventListener('click', () => {
   popupName.value = userInfoData.name;
   popupProfession.value = userInfoData.profession;
 }); 
-
-const validationConfig = {
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type-error',
-  errorClass: 'popup__input-error_visible'
-};
 
 const formProfile = document.querySelector('.popup__form_edit-profile');
 const formProfileClass = new FormValidator(validationConfig, formProfile);

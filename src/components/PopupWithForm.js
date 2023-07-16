@@ -6,15 +6,21 @@ export default class PopupWithForm extends Popup {
     this._submitCallback = submitCallback;
     this._formElement = this._container.querySelector('.popup__form');
     this._submitButton = this._formElement.querySelector('.popup__button');
+    this._inputList = Array.from(this._formElement.querySelectorAll('.popup__input'));
   }
 
   _getInputValues() {
-    const inputs = Array.from(this._formElement.querySelectorAll('.popup__input'));
-    const values = {};
-    inputs.forEach(input => {
-      values[input.name] = input.value;
+    this._values = {};
+    this._inputList.forEach(input => {
+      this._values[input.name] = input.value;
     });
-    return values;
+    return this._values;
+  }
+
+  open() {
+    super.open();
+    this._submitButton.classList.add('popup__button_disabled');
+    this._submitButton.disabled = true;
   }
 
   close() {
