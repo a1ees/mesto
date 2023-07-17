@@ -63,6 +63,17 @@ export default class FormValidator {
       });
     });
   }
+  
+  _clearValidationErrors() {
+    this._inputList.forEach((inputElement) => {
+      this._hideInputError(inputElement);
+    });
+  }
+
+  disableValidation() {
+    this._clearValidationErrors();
+    this._disableSubmitButton()
+  }
 
   enableValidation() {
     this._formElement.addEventListener('submit', (evt) => {

@@ -26,8 +26,8 @@ const userInfo = new UserInfo({
   userProfession: '.profile__profession'
 });
 
-function editCallback() {
-  userInfo.setUserInfo(popupName, popupProfession)
+function editCallback(getInputValues) {
+  userInfo.setUserInfo(getInputValues)
   popupEditProfile.close();
 }
 popupEditProfile.setEventListeners();
@@ -55,17 +55,6 @@ cardsContainer
 );
 cardsList.render();
 
-addButton.addEventListener('click', () => {
-  popupAdd.open();
-});
-
-editButton.addEventListener('click', () => {
-  popupEditProfile.open();
-  const userInfoData = userInfo.getUserInfo();
-  popupName.value = userInfoData.name;
-  popupProfession.value = userInfoData.profession;
-}); 
-
 const formProfile = document.querySelector('.popup__form_edit-profile');
 const formProfileClass = new FormValidator(validationConfig, formProfile);
 formProfileClass.enableValidation();
@@ -73,3 +62,17 @@ formProfileClass.enableValidation();
 const formPlace = document.querySelector('.popup__form_new-place');
 const formPlaceClass = new FormValidator(validationConfig, formPlace);
 formPlaceClass.enableValidation();
+
+addButton.addEventListener('click', () => {
+  popupAdd.open();
+  formPlaceClass.disableValidation()
+});
+
+editButton.addEventListener('click', () => {
+  popupEditProfile.open();
+  formProfileClass.disableValidation()
+  const userInfoData = userInfo.getUserInfo();
+  popupName.value = userInfoData.name;
+  popupProfession.value = userInfoData.profession;
+}); 
+
