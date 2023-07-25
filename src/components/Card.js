@@ -1,10 +1,14 @@
-
 export default class Card {
-  constructor(data, templateSelector, handleCardClick) {
+  constructor(data, templateSelector, handleCardClick, popupDelete, api) {
     this._name = data.name;
     this._link = data.link;
+    this._sumLike = data.likes;
+    this._owner = data.owner._id;
+    this._dataId = data._id;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
+    this._popupDelete = popupDelete;
+    this._api = api;
   }
 
   _getTemplate() {
@@ -15,26 +19,74 @@ export default class Card {
     .cloneNode(true);
   }
 
+  //добавили иконку удаления карточки при перезагрузке страницы, по id
+  _buttonDeleteAdd() {
+    this._buttonDelete.classList.add('cards__remove-btn_active')
+  }
+
   generateCard() {
     this._cardElement = this._getTemplate();
     this._cardImage = this._cardElement.querySelector('.cards__image');
     this._cardTitle = this._cardElement.querySelector('.cards__title');
+    this._like = this._cardElement.querySelector('.cards__like-sum');
+    this._like.textContent = this._sumLike.length;
     this._cardImage.src = this._link;
     this._cardImage.alt = this._name;
     this._cardTitle.textContent = this._name;
     this._buttonDelete = this._cardElement.querySelector('.cards__remove-btn');
     this._buttonLike = this._cardElement.querySelector('.cards__btn')
+    if(this._owner === '1f394163b9c39bb6454ae940') {
+      this._buttonDeleteAdd()
+    }
+    this._searchLike();
     this._setEventListeners();
     return this._cardElement;
   }
-
+  
   _handleCardDelete() {
-    this._cardElement.remove();
+    this._popupDelete.open();
+    this._popupDelete.setEventListeners(this._cardElement, this._dataId);
+  }
+
+  //помогает узнать есть ли лайк от конкретного пользователя у карточки, если есть - добавляет иконку лайка
+  _searchLike() {
+    this._sumLike.forEach((item) => {
+      if(item._id === '1f394163b9c39bb6454ae940') {
+        this._buttonLike.classList.add('cards__btn_active');
+      }
+      else {
+        this._buttonLike.classList.remove('cards__btn_active');
+      }
+    })
   }
 
   _handleCardLike() {
-    this._buttonLike.classList.toggle('cards__btn_active');
+    if (!this._buttonLike.classList.contains('cards__btn_active')) {
+      this._api.sendLike(this._dataId)
+        .then(updatedCard => {
+          // Обновляем состояние карточки на основе данных из ответа сервера
+          this._sumLike = updatedCard.likes;
+          this._like.textContent = this._sumLike.length;
+          this._searchLike();
+        })
+        .catch(error => {
+          console.error('Ошибка при постановке лайка:', error);
+        });
+    }
+    else {
+      this._removeCradLike()
+    }
   }
+  
+    _removeCradLike() {
+      this._api.deleteLike(this._dataId)
+      .then(updatedCard => {
+        this._sumLike = updatedCard.likes;
+          this._like.textContent = this._sumLike.length;
+          this._searchLike();
+          this._buttonLike.classList.remove('cards__btn_active');
+      })
+    }
 
 
   _setEventListeners() {
