@@ -1,5 +1,5 @@
 export default class Card {
-  constructor(data, templateSelector, handleCardClick, popupDelete, api) {
+  constructor(data, templateSelector, handleCardClick, popupDelete, api, userId) {
     this._name = data.name;
     this._link = data.link;
     this._sumLike = data.likes;
@@ -9,6 +9,7 @@ export default class Card {
     this._handleCardClick = handleCardClick;
     this._popupDelete = popupDelete;
     this._api = api;
+    this._userId = userId;
   }
 
   _getTemplate() {
@@ -35,7 +36,7 @@ export default class Card {
     this._cardTitle.textContent = this._name;
     this._buttonDelete = this._cardElement.querySelector('.cards__remove-btn');
     this._buttonLike = this._cardElement.querySelector('.cards__btn')
-    if(this._owner === '1f394163b9c39bb6454ae940') {
+    if(this._owner === this._userId) {
       this._buttonDeleteAdd()
     }
     this._searchLike();
@@ -51,7 +52,7 @@ export default class Card {
   //помогает узнать есть ли лайк от конкретного пользователя у карточки, если есть - добавляет иконку лайка
   _searchLike() {
     this._sumLike.forEach((item) => {
-      if(item._id === '1f394163b9c39bb6454ae940') {
+      if(item._id === this._userId) {
         this._buttonLike.classList.add('cards__btn_active');
       }
       else {
@@ -86,6 +87,9 @@ export default class Card {
           this._searchLike();
           this._buttonLike.classList.remove('cards__btn_active');
       })
+      .catch((err) => {
+        console.log(err);
+      }); 
     }
 
 

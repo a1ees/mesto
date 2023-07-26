@@ -1,9 +1,14 @@
-
-
 export default class Api {
   constructor(options) {
     this.baseUrl = options.baseUrl;
     this.headers = options.headers;
+  }
+
+  _checkResponse(res) {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
   }
 
   deleteLike(deleteId) {
@@ -11,33 +16,16 @@ export default class Api {
       method: 'DELETE',
       headers: this.headers,
     })
-    .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-      })
-      .catch((err) => {
-        console.error(`Ошибка: ${err}`);
-      });
+      .then(this._checkResponse)
   }
 
   sendLike(likeId) {
     return fetch(`${this.baseUrl}/cards/${likeId}/likes`, {
       method: 'PUT',
       headers: this.headers,
-
       body: JSON.stringify({})
     })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+      .then(this._checkResponse)
   }
 
   deleteCard(cardId) {
@@ -45,34 +33,25 @@ export default class Api {
       method: 'DELETE',
       headers: this.headers,
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-      })
-      .catch((err) => {
-        console.error(`Ошибка: ${err}`);
-      });
+      .then(this._checkResponse)
   }
 
-  sendCard({name, link}) {
+  sendCard({ name, link }) {
     return fetch(`${this.baseUrl}/cards`, {
       method: 'POST',
       headers: this.headers,
-
       body: JSON.stringify({
         name: name,
         link: link
       })
-    });
+    })
+    .then(this._checkResponse)
   }
 
-  sendUserInfo({name, about}) {
+  sendUserInfo({ name, about }) {
     return fetch(`${this.baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this.headers,
-
       body: JSON.stringify({
         name: name,
         about: about
@@ -84,7 +63,6 @@ export default class Api {
     return fetch(`${this.baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: this.headers,
-
       body: JSON.stringify(avatar)
     });
   }
@@ -94,18 +72,7 @@ export default class Api {
       method: 'GET',
       headers: this.headers
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-      })
-      .then((data) => {
-        return data
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-      });
+      .then(this._checkResponse)
   }
 
   getCardsItem() {
@@ -113,17 +80,6 @@ export default class Api {
       method: 'GET',
       headers: this.headers
     })
-    .then((res) => {
-      if(res.ok) {
-        return res.json()
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((data) => {
-      return data
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+      .then(this._checkResponse)
   }
 }

@@ -6,7 +6,7 @@ import UserInfo from '../components/UserInfo.js'
 import PopupWithImage from '../components/PopupWithImage.js'
 import PopupDelete from '../components/PopupDelete'
 import PopupWithForm from '../components/PopupWithForm.js'
-import { validationConfig } from '../utils/constants.js'
+import { validationConfig, cardsItems, cardsContainer } from '../utils/constants.js'
 import Api from '../components/Api.js'
 
 const avatarButton = document.querySelector('.profile__avatar-container')
@@ -14,9 +14,11 @@ const editButton = document.querySelector('.profile__edit-button');
 const popupName = document.querySelector('.popup__input_name');
 const popupProfession = document.querySelector('.popup__input_profession');
 const addButton = document.querySelector('.profile__add-button');
-const cardsItems = '#cards__item';
-const cardsContainer = '.cards';
 
+
+ 
+let userId;
+let cardsList;
 const popupImg = document.querySelector('.popup__image');
 const popupTitle = document.querySelector('.popup__title_open-card');
 
@@ -35,67 +37,73 @@ const popupAdd = new PopupWithForm('.popup_add-card', addCallback);
 const popupAvatar = new PopupWithForm('.popup_edit-avatar', avatarCallback);
 
 
-let cardsList; 
-api.getCardsItem()
-  .then((data) => {
-    cardsList = new Section({
-      items: data.reverse(), 
-      renderer: (item) => {
-        createCard(item);
-      }
-    }, cardsContainer);
-    cardsList.render();
-  })
-
-
 const userInfo = new UserInfo({
   name: '.profile__name',
   about: '.profile__profession',
   avatar: '.profile__avatar'
 });
 
-api.getUserInfo()
-.then((data) => {
-  userInfo.setUserInfo(data);
-  userInfo.setUserAvatar(data);
-})
+
+Promise.all([api.getUserInfo(), api.getCardsItem()])
+    .then(([userData, cardData]) => {
+      userId = userData._id;
+      userInfo.setUserInfo(userData);
+      userInfo.setUserAvatar(userData);
+
+      cardsList = new Section({
+        items: cardData.reverse(), 
+        renderer: (item) => {
+          cardsList.addCard(createCard(item))
+        }
+      }, cardsContainer);
+      cardsList.render();
+    })
+    .catch(error => {
+      console.error('Произошла ошибка:', error);
+    });
+
+
+
 
 function avatarCallback(getInputValues) {
-  this._submitButton.textContent = 'Сохранение...';
+  this.submitButton.textContent = 'Сохранение...';
   api.sendAvatar(getInputValues)
+  .catch((err) => {
+    console.log(err); // выведем ошибку в консоль
+  })
   .finally(() => {
-    this._submitButton.textContent = 'Да';
+    userInfo.setUserAvatar(getInputValues);
+    popupAvatar.close();
+    this.submitButton.textContent = 'Да';
   });
-  userInfo.setUserAvatar(getInputValues);
-  popupAvatar.close();
 }
 
 function editCallback(getInputValues) {
-  this._submitButton.textContent = 'Сохранение...';
+  this.submitButton.textContent = 'Сохранение...';
   userInfo.setUserInfo(getInputValues)
   api.sendUserInfo(getInputValues)
+  .catch((err) => {
+    console.log(err); // выведем ошибку в консоль
+  })
   .finally(() => {
-    this._submitButton.textContent = 'Сохранить';
+    this.submitButton.textContent = 'Сохранить';
   });
   popupEditProfile.close();
 }
 
 function addCallback(inputValues) {
-  this._submitButton.textContent = 'Сохранение...';
+  this.submitButton.textContent = 'Сохранение...';
 
   api.sendCard({ name: inputValues.place, link: inputValues.placepic })
-    .then((res) => {
-      return res.json();
-    })
     .then((newCardData) => {
       createCard(newCardData);
       popupAdd.close();
     })
     .catch((error) => {
-      console.error('Error sending card:', error);
+      console.error(error);
     })
     .finally(() => {
-      this._submitButton.textContent = 'Сохранить';
+      this.submitButton.textContent = 'Сохранить';
     });
 }
 
@@ -105,9 +113,8 @@ popupAvatar.setEventListeners();
 popupWithImage.setEventListeners();
 
 function createCard(item) {
-  const card = new Card(item, cardsItems, popupWithImage, popupCardDelete, api);
-  const cardElement = card.generateCard();
-  cardsList.addCard(cardElement);
+  const card = new Card(item, cardsItems, popupWithImage, popupCardDelete, api, userId);
+  return card.generateCard();
   }
 
 const formProfile = document.querySelector('.popup__form_edit-profile');

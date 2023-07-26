@@ -7,4 +7,7 @@
   errorClass: 'popup__input-error_visible'
 };
 
+export const cardsItems = '#cards__item';
+export const cardsContainer = '.cards';
+
 
