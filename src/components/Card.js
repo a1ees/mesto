@@ -45,8 +45,7 @@ export default class Card {
   }
   
   _handleCardDelete() {
-    this._popupDelete.open();
-    this._popupDelete.setEventListeners(this._cardElement, this._dataId);
+    this._popupDelete.open(this._cardElement, this._dataId);
   }
 
   //помогает узнать есть ли лайк от конкретного пользователя у карточки, если есть - добавляет иконку лайка

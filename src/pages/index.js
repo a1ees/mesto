@@ -16,7 +16,6 @@ const popupProfession = document.querySelector('.popup__input_profession');
 const addButton = document.querySelector('.profile__add-button');
 
 
- 
 let userId;
 let cardsList;
 const popupImg = document.querySelector('.popup__image');
@@ -65,30 +64,34 @@ Promise.all([api.getUserInfo(), api.getCardsItem()])
 
 
 
-function avatarCallback(getInputValues) {
-  this.submitButton.textContent = 'Сохранение...';
-  api.sendAvatar(getInputValues)
-  .catch((err) => {
-    console.log(err); // выведем ошибку в консоль
-  })
-  .finally(() => {
-    userInfo.setUserAvatar(getInputValues);
-    popupAvatar.close();
-    this.submitButton.textContent = 'Да';
-  });
-}
+    function avatarCallback(getInputValues) {
+      this.submitButton.textContent = 'Сохранение...';
+      api.sendAvatar(getInputValues)
+        .then(() => {
+          userInfo.setUserAvatar(getInputValues);
+          popupAvatar.close();
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          this.submitButton.textContent = 'Да';
+        });
+    }
 
 function editCallback(getInputValues) {
   this.submitButton.textContent = 'Сохранение...';
   userInfo.setUserInfo(getInputValues)
   api.sendUserInfo(getInputValues)
+  .then(() => {
+    popupEditProfile.close();
+  })
   .catch((err) => {
     console.log(err); // выведем ошибку в консоль
   })
   .finally(() => {
     this.submitButton.textContent = 'Сохранить';
   });
-  popupEditProfile.close();
 }
 
 function addCallback(inputValues) {
@@ -96,11 +99,12 @@ function addCallback(inputValues) {
 
   api.sendCard({ name: inputValues.place, link: inputValues.placepic })
     .then((newCardData) => {
-      createCard(newCardData);
+      const newCard = createCard(newCardData);
+      cardsList.addCard(newCard);
       popupAdd.close();
     })
     .catch((error) => {
-      console.error(error);
+      console.log(error);
     })
     .finally(() => {
       this.submitButton.textContent = 'Сохранить';
@@ -111,6 +115,7 @@ popupEditProfile.setEventListeners();
 popupAdd.setEventListeners();
 popupAvatar.setEventListeners();
 popupWithImage.setEventListeners();
+popupCardDelete.setEventListeners();
 
 function createCard(item) {
   const card = new Card(item, cardsItems, popupWithImage, popupCardDelete, api, userId);
