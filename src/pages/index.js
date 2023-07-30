@@ -81,9 +81,9 @@ Promise.all([api.getUserInfo(), api.getCardsItem()])
 
 function editCallback(getInputValues) {
   this.submitButton.textContent = 'Сохранение...';
-  userInfo.setUserInfo(getInputValues)
   api.sendUserInfo(getInputValues)
   .then(() => {
+    userInfo.setUserInfo(getInputValues)
     popupEditProfile.close();
   })
   .catch((err) => {
